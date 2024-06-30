@@ -111,5 +111,6 @@ return [
     */
 
     'password_timeout' => 10800,
+    'api_token' => env('API_TOKEN', 'your-fixed-64-character-token'),
 
 ];
