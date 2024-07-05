@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CurrencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::middleware('auth.token')->group(function () {
-    Route::get('/user', function (Request $request) {
-        // Ваш код для маршрута /user
-        return $request->user();
-    });
+Route::middleware('auth.token')->group(function () {// defence with bearer_token
+    Route::get('/currs', [CurrencyController::class, 'index']);
+    // Route::get('/currs/{$currency}', function (Request $request) {//smth_idk
+    //     return $request->user();
+    // });
 
 });

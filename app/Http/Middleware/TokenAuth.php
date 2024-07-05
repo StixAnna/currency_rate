@@ -19,13 +19,13 @@ class TokenAuth
         $token = $request->header('Authorization');
 
         if (!$token || !Str::startsWith($token, 'Bearer ')) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $token = Str::substr($token, 7); // Remove 'Bearer ' prefix
 
         if ($token !== config('auth.api_token')) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Invalid token'], 403);
         }
 
         return $next($request);
