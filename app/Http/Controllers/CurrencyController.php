@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Redis;
 class CurrencyController extends Controller
 {
     // use AuthorizesRequests, ValidatesRequests;
+    function ComparerateUsd($a, $b) //   kalkalich
+{
+    return $b['attrs']['ctr'] <=> $a['attrs']['ctr'];
+}
 
     //display all currencyes, json return
     public function index(){
@@ -28,24 +32,25 @@ class CurrencyController extends Controller
         $spons_currs = json_decode(curl_exec($curlSession));
         curl_close($curlSession);
 
-        // return response()->json($spons_currs); //debug
-
         $arr = $spons_currs -> data;
-
-        // return response()->json($arr); //debug
+        $ourcurr_price = [];
+        $return['status'] = 'success';
+        $return['code'] = 200;
 
         // schet every curr
         foreach ($arr as $currency){
-            $currency -> rateUsd *= 1.02;
-            $ourcurr_price [] = $currency;
-
+            $curmane = $currency -> symbol;
+            $curprice = $currency -> rateUsd;
+            $value[$curmane] = $curprice * 1.02;
+            $ourcurr_price = array_merge($ourcurr_price, $value);
         }
+        // usort($ourcurr_price, 'ComparerateUsd'); //kalkalich
+
+        $return['data'] = $ourcurr_price;
 
         // Save sounds to the cache for future requests
         // Redis::set('currencys', json_encode($ourcurr_price));
 
-        // return response()->json($ourcurr_price);
-        return response()->json($ourcurr_price, 200, ['status' => 'success']);
+        return response()->json($return, 200, ['status' => 'success']);
     }
-
 }
